@@ -1,0 +1,135 @@
+body {
+  background-color: #f2f2f285;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  /* overflow: hidden; */
+  font-family: "Poppins", sans-serif;
+}
+
+#addFilePage {
+  /* height: 100vh; */
+  width: 100%;
+}
+
+header {
+  height: 10vh;
+  display: flex;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  justify-content: space-between;
+  align-items: center;
+}
+header>div {
+  display: flex;
+  align-items: center;
+}
+
+header img {
+  width: 3rem;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+header button{
+  height: 60%;
+  width: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  padding-right: 20px;
+}
+.uploadPage {
+  height: 90vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.uploadPage>form>div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.uploadPage>form>div>div{
+  display: flex;
+}
+.uploadPage>form>div>h2,.selectPdf>span{
+  text-align: center;
+}
+.selectPdf{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.uploadPage button {
+  height: 40px;
+  color: white;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+  border-radius: 2rem;
+  width: 8.5rem;
+  background-color: #177254;
+  margin-top: 10px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.oldPdf .added{
+  color: gray;
+  background-color: gray !important;
+}
+.oldPdf .removed{
+  color: red;
+}
+.newPdf .added{
+  color: green;
+}
+.newPdf .removed{
+  background-color: gray !important;
+  color: gray;
+}
+.PreviewPage{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  height: 90vh;
+}
+.changesShow{
+  width: 30%;
+  height: 90vh;
+  overflow-y: scroll;
+}
+.PdfDiffView{
+  display: flex;
+  width: 70%;
+  height: 90vh;
+  overflow-y: scroll;
+  font-size: 14px;
+}
+.PdfDiffView>div{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.pdfName,.changesShow>span{
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -6px #222;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(5px);
+}
+.changesContainer{
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+}
+.highlightsText{
+  background-color: yellow;
+}
