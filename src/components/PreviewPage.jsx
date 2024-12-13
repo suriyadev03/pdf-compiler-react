@@ -76,25 +76,25 @@ const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
   
       if (i < array.length - 1) {
         if (part.removed) {
-          changes.newPdf = `show_${i + 1}`;
+          changes.newPdf = `show_${uuidv4New + 1}`;
           if (array[i + 1].added) {
             resultClass = `replacedText show_${i}`;
             changes.title = 'Replaced';
             changes.addedText = array[i + 1].value;
             changes.removedText = array[i].value;
-            changes.oldPdf = `show_${i}`;
+            changes.oldPdf = `show_${uuidv4New}`;
           } else {
             resultClass = `removedWord show_${i}`;
             changes.title = 'Removed';
             changes.removedText = array[i].value;
-            changes.oldPdf = `show_${i}`;
+            changes.oldPdf = `show_${uuidv4New}`;
           }
         } else if (part.added) {
           if (!array[i - 1]?.removed) {
             resultClass = `addedText show_${i}`;
             changes.title = 'Added';
             changes.addedText = array[i].value;
-            changes.newPdf = `show_${i}`;
+            changes.newPdf = `show_${uuidv4New}`;
           }
         }
         changes.pointerName = `scrollPoint_${uuidv4New}`;
@@ -107,7 +107,7 @@ const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
         span: (
           <span
             key={`diff_${i}_${part.value}`}
-            className={`${part.removed ? 'removed show_' + i : ''} ${part.added ? 'added show_' + i : ''}`}
+            className={`${part.removed ? 'removed show_' + uuidv4New : ''} ${part.added ? 'added show_' + uuidv4New : ''}`}
             dangerouslySetInnerHTML={{ __html: updateText }}
           />
         ),
@@ -123,6 +123,8 @@ const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
   
 
   const handleScrollToChange = (pointerName, oldPdfClass, newPdfClass, title) => {
+    console.log("oldPdf, newPdf",oldPdfClass, newPdfClass);
+    
     const clearHighlights = (containerRef) => {
       if (containerRef.current) {
         containerRef.current.querySelectorAll('.highlightsText').forEach((el) => {
