@@ -3,21 +3,18 @@ import { diffWords } from 'diff';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
-const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
+const PreviewPage = ({ oldPdf, newPdf, pdfNames, setLoder,setLoadPercentage }) => {
   const navigate = useNavigate();
   const [diffResult, setDiffResult] = useState([]);
   const [changeRecords, setChangeRecords] = useState([]);
-  const [percentage, setPercentage] = useState(10); // Start with 10%
-  const [oldPdfLength, setOldPdfLength] = useState('');
-  const [newPdfLength, setNewPdfLength] = useState('');
+  const [percentage, setPercentage] = useState(10);
   const oldPdfRef = useRef(null);
   const newPdfRef = useRef(null);
 
   const getLimitedWords = (text, percentage, previousPercentage = 0) => {
-    const paragraphs = text.split(/\n+/); // Split by paragraphs
+    const paragraphs = text.split(/\n+/);
     const totalWords = text.split(/\s+/).length;
   
-    // Calculate the word limits for the current chunk
     const start = Math.ceil((totalWords * previousPercentage) / 100);
     const end = Math.ceil((totalWords * percentage) / 100);
   
@@ -27,12 +24,10 @@ const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
     for (const paragraph of paragraphs) {
       const paragraphWords = paragraph.split(/\s+/);
   
-      // If adding the entire paragraph is within the limit
       if (wordCount + paragraphWords.length <= end) {
-        if (wordCount >= start) result.push(paragraph); // Include paragraphs within the chunk range
+        if (wordCount >= start) result.push(paragraph);
         wordCount += paragraphWords.length;
       } else {
-        // Add only the remaining words needed from this paragraph
         const remainingWords = end - wordCount;
         if (remainingWords > 0 && wordCount >= start) {
           result.push(paragraphWords.slice(0, remainingWords).join(' '));
@@ -43,17 +38,14 @@ const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
   
     return result.join('\n');
   };
-  
-  
 
   useEffect(() => {
     if (!oldPdf) {
       navigate('/');
       return;
     }
-    console.log('uuidv4',uuidv4());
     
-    const previousPercentage = percentage - 10; // Get the previous chunk
+    const previousPercentage = percentage - 10;
   
     const limitedOldPdf = getLimitedWords(oldPdf, percentage, previousPercentage);
     const limitedNewPdf = getLimitedWords(newPdf, percentage, previousPercentage);
@@ -76,7 +68,7 @@ const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
   
       if (i < array.length - 1) {
         if (part.removed) {
-          changes.newPdf = `show_${uuidv4New + 1}`;
+          changes.newPdf = `show_${uuidv4New}`;
           if (array[i + 1].added) {
             resultClass = `replacedText show_${i}`;
             changes.title = 'Replaced';
@@ -114,11 +106,11 @@ const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
         id: `scrollPoint_${uuidv4New}`,
       };
     });
-    console.log("updatedResults",updatedResults);
     
-    setDiffResult((prev) => [...prev, ...updatedResults]); // Append new results
-    setChangeRecords((prev) => [...prev, ...tempChangeRecords]); // Append new changes
+    setDiffResult((prev) => [...prev, ...updatedResults]);
+    setChangeRecords((prev) => [...prev, ...tempChangeRecords]);
     loadMoreWords()
+
   }, [oldPdf, newPdf, percentage, navigate]);
   
 
@@ -169,50 +161,53 @@ const PreviewPage = ({ oldPdf, newPdf, pdfNames }) => {
   const loadMoreWords = () => {
     if (percentage < 100) {
       setPercentage((prev) => Math.min(prev + 10, 100));
+      setLoadPercentage(percentage)
+    }else{
+      setLoder(false)
+      console.log("loadMoreWords end");
+      
     }
   };
-
   return (
-    <div className='PreviewPage'>
-      <div className='PdfDiffView'>
-        <div className='oldPdf' ref={oldPdfRef}>
-          <div className='pdfName'>Old PDF: <b>{pdfNames.oldPdfName}</b></div>
-          {diffResult.map((result) => (
-            <span key={result.id} id={result.id}>
-              {result.span}
-            </span>
-          ))}
-        </div>
-        <div className='newPdf' ref={newPdfRef}>
-          <div className='pdfName'>New PDF: <b>{pdfNames.newPdfName}</b></div>
-          {diffResult.map((result) => (
-            <span key={result.id} id={result.id}>
-              {result.span}
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className='changesShow'>
-        <span>Changes:</span>
-        {changeRecords.map((changes, i) => (
-          <div
-            key={`change_${i}_${changes.title}`}
-            className='changesContainer'
-            onClick={() => handleScrollToChange(changes.pointerName, changes.oldPdf, changes.newPdf, changes.title)}
-          >
-            <span>{i + 1}. {changes.title}</span>
-            <span style={{ color: 'green' }}>{changes.addedText}</span>
-            <span style={{ color: 'red' }}>{changes.removedText}</span>
+   <div className='container'>
+      <div className='PreviewPage'>
+        <div className='PdfDiffView'>
+          <div className='oldPdf' ref={oldPdfRef}>
+            <div className='pdfName'>Old PDF: <b>{pdfNames.oldPdfName}</b></div>
+            <div className='pdf_Section_content'>
+              {diffResult.map((result) => (
+                <span key={result.id} id={result.id}>
+                  {result.span}
+                </span>
+              ))}
+            </div>
           </div>
-        ))}
+          <div className='newPdf' ref={newPdfRef}>
+            <div className='pdfName'>New PDF: <b>{pdfNames.newPdfName}</b></div>
+            <div className='pdf_Section_content'>
+              {diffResult.map((result) => (
+                <span key={result.id} id={result.id}>
+                  {result.span}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className='changesShow'>
+          <span>Changes:</span>
+          {changeRecords.map((changes, i) => (
+            <div
+              key={`change_${i}_${changes.title}`}
+              className='changesContainer'
+              onClick={() => handleScrollToChange(changes.pointerName, changes.oldPdf, changes.newPdf, changes.title)}
+            >
+              <span>{i + 1}. {changes.title}</span>
+              <span style={{ color: 'green' }}>{changes.addedText}</span>
+              <span style={{ color: 'red' }}>{changes.removedText}</span>
+            </div>
+          ))}
+        </div>
       </div>
-      {percentage < 100 && (
-        // <button onClick={loadMoreWords} className='loadMore'>
-        //   Load More
-        // </button>
-        <>
-        </>
-      )}
     </div>
   );
 };

@@ -4,8 +4,8 @@ const Header = () => {
     return (
         <header>
             <div>
-                <img src="https://cdn-icons-png.flaticon.com/512/3526/3526556.png" alt="icon" />
-                <h3 id="headerTitle">Compare Files</h3>
+                <img src="https://www.straive.com/wp-content/uploads/2024/12/straive-final-logo-184x48.png" alt="icon" />
+               
             </div>
         </header>
     )
